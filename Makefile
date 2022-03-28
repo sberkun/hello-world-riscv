@@ -19,7 +19,7 @@ RISCV_LINK_OPTS ?= -g -static -nostartfiles -lm -lgcc -T $(src_dir)/link.ld
 
 RISCV_OBJDUMP ?= $(RISCV_PREFIX)objdump --disassemble-all --disassemble-zeroes --section=.text --section=.text.startup --section=.text.init --section=.data
 
-incs  += -I $(src_dir)lib/common
+incs  += -I $(src_dir)
 
 demo.riscv: $(wildcard ./*.c) $(src_dir)/syscall.c $(src_dir)/crt.S
 	$(RISCV_GCC) $(incs) $(RISCV_GCC_OPTS) $(RISCV_LINK_OPTS) -o $@ $^
