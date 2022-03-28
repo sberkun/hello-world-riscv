@@ -1,5 +1,12 @@
 
-RISCV_GCC ?= riscv64-unknown-elf-gcc
+XLEN ?= 64
+
+
+src_dir = common
+
+RISCV_PREFIX ?= riscv$(XLEN)-unknown-elf-
+RISCV_GCC ?= $(RISCV_PREFIX)gcc
+
 RISCV_GCC_OPTS ?= \
 				-DPREALLOCATE=1 -mcmodel=medany -static \
 				-march=rv32i -mabi=ilp32 \
@@ -7,16 +14,25 @@ RISCV_GCC_OPTS ?= \
 				-Og \
 				-ffast-math -fno-common -fno-builtin-printf
 
-RISCV_LINK_OPTS ?= -g -static -nostartfiles -lm -lgcc -T common/link.ld
+RISCV_LINK ?= $(RISCV_GCC) -T $(src_dir)/link.ld $(incs)
+RISCV_LINK_OPTS ?= -g -static -nostartfiles -lm -lgcc -T $(src_dir)/link.ld
 
-all: cheese1.riscv cheese2.riscv
+RISCV_OBJDUMP ?= $(RISCV_PREFIX)objdump --disassemble-all --disassemble-zeroes --section=.text --section=.text.startup --section=.text.init --section=.data
 
-cheese1.riscv: cheese.c common/syscall.c common/crt.S
-	$(RISCV_GCC) -I common $(RISCV_GCC_OPTS) $(RISCV_LINK_OPTS) -o $@ cheese.c common/syscall.c common/crt.S
+incs  += -I $(src_dir)lib/common
 
-cheese2.riscv: cheese.c common/sbrk_only.c common/start.S
-	$(RISCV_GCC) -O0 -march=rv32i -mabi=ilp32 -nostartfiles -Wl,-Ttext=0x80000100 -o $@ cheese.c common/sbrk_only.c common/start.S
+demo.riscv: $(wildcard ./*.c) $(src_dir)/syscall.c $(src_dir)/crt.S
+	$(RISCV_GCC) $(incs) $(RISCV_GCC_OPTS) $(RISCV_LINK_OPTS) -o $@ $^
+
+demo.dump: demo.riscv
+	$(RISCV_OBJDUMP) $< > $@
+
+demo.dump.annot: demo.riscv
+	$(RISCV_OBJDUMP) -S $< > $@
+
+all: demo.riscv demo.dump demo.dump.annot
 
 clean:
-	-rm -f cheese1.riscv cheese2.riscv
+	-rm -f *.riscv *.dump *.dump.annot
+
 
