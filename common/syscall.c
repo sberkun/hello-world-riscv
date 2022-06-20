@@ -79,10 +79,41 @@ void printstr(const char* s)
   syscall(SYS_write, 1, (uintptr_t)s, strlen(s));
 }
 
+
+
+
+static char main_lock = 0;
+
+void low_lock_aquire(char* lock) {
+    asm (
+        "li t0, 1\n"
+        "amoswap.w.aq t0, t0, (%0)"
+        : // outputs
+        : "r"(lock) //inputs
+        : "t0" // clobbers
+    );
+}
+
+void low_lock_release(char* lock) {
+    asm (
+        "amoswap.w.rl x0, x0, (%0)"
+        : // outputs
+        : "r"(lock) //inputs
+        : "t1" // clobbers
+    );
+}
+
+
+
+
+
+
+
 void __attribute__((weak)) thread_entry(int cid, int nc)
 {
   // multi-threaded programs override this function.
   // for the case of single-threaded programs, only let core 0 proceed.
+  printstr("hello from core\n");
   while (cid != 0);
 }
 

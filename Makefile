@@ -9,7 +9,7 @@ RISCV_GCC ?= $(RISCV_PREFIX)gcc
 
 RISCV_GCC_OPTS ?= \
 				-DPREALLOCATE=1 -mcmodel=medany -static \
-				-march=rv32i -mabi=ilp32 \
+				-march=rv32ia -mabi=ilp32 \
 				-std=gnu99 \
 				-Og \
 				-ffast-math -fno-common -fno-builtin-printf

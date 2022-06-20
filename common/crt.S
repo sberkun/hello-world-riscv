@@ -123,7 +123,6 @@ _start:
   csrr a0, mhartid
   # for now, assume only 1 core
   li a1, 1
-1:bgeu a0, a1, 1b
 
   # give each core 128KB of stack + TLS
 #define STKSHIFT 17
