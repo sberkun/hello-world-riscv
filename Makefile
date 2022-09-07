@@ -1,5 +1,5 @@
 
-XLEN ?= 64
+XLEN ?= 32
 
 
 src_dir = common
