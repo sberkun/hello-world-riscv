@@ -2,13 +2,13 @@
 A simple "hello world" program for riscv
 
 Prerequisites:
- - `riscv64-unkonown-elf-gcc`
+ - `riscv32-unknown-elf-gcc`
  - `spike`
 
 ## Instructions
 
  - Run `make`. This should build `demo.riscv`
- - Run `spike --isa=rv32i demo.riscv`. This will run `demo.riscv` on a simulated rv32i architecture. This corresponds to the `-march=rv32i -mabi=ilp32` flags in the Makefile.
+ - Run `make run`. This will run `demo.riscv` on a simulated rv32ia architecture. This corresponds to the `-march=rv32ia -mabi=ilp32` flags in the Makefile.
 
 ## Credits
 

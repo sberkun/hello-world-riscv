@@ -32,6 +32,10 @@ demo.dump.annot: demo.riscv
 
 all: demo.riscv demo.dump demo.dump.annot
 
+
+run: demo.riscv
+	spike --isa=rv32ia -p8 $^
+
 clean:
 	-rm -f *.riscv *.dump *.dump.annot
 
